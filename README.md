@@ -1,20 +1,37 @@
-Flask Server for Media Playback
-Overview
+# Flask Media Server
 
-This repository contains a Flask application designed to serve as a media player server utilizing FFplay from the FFmpeg suite to execute media playback commands. The server is structured to receive and handle API calls for playing, stopping, and checking the status of media files.
-Installation and Setup
+## Overview
+This repository hosts a Flask-based media server that integrates FFplay from the FFmpeg suite for media playback. The server is designed to respond to network requests for playing, stopping, and querying the status of media files.
 
-First, ensure that FFplay is installed on your device as it is necessary for media playback. FFplay is not included with Python and must be installed separately. For Ubuntu systems, you can install FFmpeg, which includes FFplay, using sudo apt update followed by sudo apt install ffmpeg. For Windows, download the latest FFmpeg builds from the FFmpeg Official Site and ensure the bin directory containing FFplay is added to your system's PATH.
+## Setup Instructions
 
-After setting up FFplay, clone this repository to your device where the server will run using the command git clone https://github.com/yourusername/yourrepository.git. Navigate to the project directory, and install Flask using the requirements file with pip install -r requirements.txt.
-Usage
+### FFplay Installation
+FFplay is essential for the media playback functionality of this server and is part of the FFmpeg suite. It must be installed separately:
+- **Ubuntu:** Install FFmpeg, which includes FFplay, using:
+  sudo apt update
+  sudo apt install ffmpeg
+- **Windows:** Download FFmpeg from the [official FFmpeg site](https://ffmpeg.org/download.html) and add the `bin` directory to your PATH.
 
-To start the server, execute the command flask run --host=0.0.0.0 --port=5000 within the project directory. The server offers several API endpoints:
+### Server Installation
+Clone this repository to your server machine:
+  git clone https://github.com/yourusername/yourrepository.git
+Navigate to the cloned directory and install Flask along with any other required packages using:
+  pip install -r requirements.txt
 
-    To start or change media playback, make a POST request to /api/play with a JSON payload containing 'media_url'.
-    To stop media playback, make a POST request to /api/stop.
-    To get the current status of media playback, make a GET request to /api/status.
+## Usage
 
-The Flask application uses Python's subprocess module to invoke ffplay for media playback. For example, to play a new media file received through the /api/play endpoint, the application executes subprocess.Popen(['ffplay', '-autoexit', media_url]). The -autoexit flag tells FFplay to exit after the media has finished playing, allowing the application to handle new media requests by either stopping current playback or starting new playback based on the received media URL.
+### Starting the Server
+Launch the server with:
+  flask run --host=0.0.0.0 --port=5000
 
-This setup ensures that all media playback is handled efficiently, leveraging FFplay's capabilities through subprocess calls initiated by Flask's web server capabilities.
+### API Endpoints
+- **Play Media:** POST to `/api/play` with `{'media_url': 'url_to_media'}` to start or change playback.
+- **Stop Media:** POST to `/api/stop` to stop the current playback.
+- **Check Status:** GET `/api/status` for current playback status.
+
+### Integration with FFplay
+The server utilizes Python's `subprocess` module to manage FFplay processes. For instance, when a request to play a new media file is received at `/api/play`, the server executes:
+  subprocess.Popen(['ffplay', '-autoexit', 'media_url'])
+The `-autoexit` option ensures that FFplay automatically exits after the media file has finished playing. The server manages ongoing media requests, allowing it to stop current playback or start new playback as needed based on the API requests it receives.
+
+This streamlined setup allows the Flask server to efficiently handle media playback commands, utilizing FFplay's robust features.
